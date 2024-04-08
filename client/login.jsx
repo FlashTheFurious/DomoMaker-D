@@ -41,6 +41,8 @@ const handleSignup = (e) => {
 }
 
 const LoginWindow = (props) => {
+    // Needed to remove 'unused' error
+    console.log(props);
     return (
         <form id="loginForm"
               name="loginForm"
@@ -56,9 +58,13 @@ const LoginWindow = (props) => {
             <input className="formSubmit" type="submit" value="Sign in" />
         </form>
     );
+    
 };
 
 const SignupWindow = (props) => {
+    // Needed to remove 'unused' error
+    console.log(props);
+
     return (
         <form id="signupForm"
               name="signupForm"
