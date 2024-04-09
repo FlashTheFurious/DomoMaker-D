@@ -11,6 +11,11 @@ const DomoSchema = new mongoose.Schema({
     trim: true,
     set: setName,
   },
+  species: {
+    type: String,
+    required: true,
+    trim: true,
+  },
   age: {
     type: Number,
     min: 0,
@@ -30,6 +35,7 @@ const DomoSchema = new mongoose.Schema({
 DomoSchema.statics.toAPI = (doc) => ({
   name: doc.name,
   age: doc.age,
+  species: doc.species,
 });
 
 const DomoModel = mongoose.model('Domo', DomoSchema);

@@ -5,11 +5,12 @@ const makerPage = async (req, res) => {
   };
 const makeDomo = async (req, res) => {
     if (!req.body.name || !req.body.age) {
-      return res.status(400).json({ error: 'Both name and age are required!' });
+      return res.status(400).json({ error: 'Name, age, and species are required!' });
     }
   
     const domoData = {
       name: req.body.name,
+      species: req.body.species,
       age: req.body.age,
       owner: req.session.account._id,
     };
@@ -29,7 +30,7 @@ const makeDomo = async (req, res) => {
 const getDomos = async (req, res) => {
   try {
       const query = { owner: req.session.account._id };
-      const docs = await Domo.find(query).select('name age').lean().exec();
+      const docs = await Domo.find(query).select('name age species').lean().exec();
 
       return res.json({ domos: docs });
   } catch (err) {

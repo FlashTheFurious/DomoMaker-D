@@ -4,17 +4,9 @@ const { useState, useEffect } = React;
 const { createRoot } = require('react-dom/client');
 
 //Was getting props validation error
+
 const PropTypes = require('prop-types');
 
-DomoForm.propTypes = {
-    triggerReload: PropTypes.func.isRequired,
-};
-
-DomoList.propTypes = {
-    domos: PropTypes.array.isRequired,
-    reloadDomos: PropTypes.bool.isRequired,
-};
-// end of changed section
 
 const handleDomo = (e, onDomoAdded) => {
     e.preventDefault();
@@ -22,33 +14,43 @@ const handleDomo = (e, onDomoAdded) => {
 
     const name = e.target.querySelector("#domoName").value;
     const age = e.target.querySelector("#domoAge").value;
+    const species = e.target.querySelector("#domoSpecies").value;
 
-    if (!name || !age) {
+    // Logging the values to see if they are being captured correctly
+    console.log('Form values:', { name, age, species });
+
+    if (!name || !age || !species) {
         helper.handleError('All fields are required');
         return false;
     }
-
-    helper.sendPost(e.target.action, { name, age }, onDomoAdded);
-    return false;
+    // Logging to indicate we are about to send a post request
+    console.log('Sending post request for new Domo');
+    helper.sendPost(e.target.action, { name, species, age }, onDomoAdded);    return false;
 }
 const DomoForm = (props) => {
+    // console.log('DomoForm props:', props); // Log the props for DomoForm
+
     return (
-        <form id="domoForm"
-              onSubmit={(e) => handleDomo(e, props.triggerReload)}
-              name="domoForm"
-              action="/maker"
-              method="POST"
-              className="domoForm"
-        >
-            <label htmlFor="name">Name: </label>
-            <input id="domoName" type="text" name="name" placeholder="Domo Name" />
-            <label htmlFor="age">Age: </label>
-            <input id="domoAge" type="number" min="0" name="age" />
+        <form id="domoForm" onSubmit={(e) => handleDomo(e, props.triggerReload)} className="domoForm">
+            <div className="inputContainer">
+                <label htmlFor="name">Name:</label>
+                <input id="domoName" type="text" name="name" placeholder="Domo Name" />
+            </div>
+            <div className="inputContainer">
+                <label htmlFor="species">Species:</label>
+                <input id="domoSpecies" type="text" name="species" placeholder="Domo Species" />
+            </div>
+            <div className="inputContainer">
+                <label htmlFor="age">Age:</label>
+                <input id="domoAge" type="number" min="0" name="age" />
+            </div>
             <input className="makeDomoSubmit" type="submit" value="Make Domo" />
         </form>
     );
 };
 const DomoList = (props) => {
+    console.log('DomoList props:', props); // Loging the props for DomoForm
+
     const [domos, setDomos] = useState(props.domos);
 
     useEffect(() => {
@@ -73,6 +75,7 @@ const DomoList = (props) => {
             <div key={domo._id} className="domo">
                 <img src="/assets/img/domoface.jpeg" alt="domo face" className="domoFace" />
                 <h3 className="domoName">Name: {domo.name}</h3>
+                <h3 className="domoSpecies">Species: {domo.species}</h3>
                 <h3 className="domoAge">Age: {domo.age}</h3>
             </div>
         );
@@ -85,6 +88,14 @@ const DomoList = (props) => {
     );
 };
 
+DomoForm.propTypes = {
+    triggerReload: PropTypes.func.isRequired,
+};
+
+DomoList.propTypes = {
+    domos: PropTypes.array.isRequired,
+    reloadDomos: PropTypes.bool.isRequired,
+};
 
 const App = () => {
     const [reloadDomos, setReloadDomos] = useState(false);
