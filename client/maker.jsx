@@ -53,6 +53,27 @@ const DomoList = (props) => {
 
     const [domos, setDomos] = useState(props.domos);
 
+    const handleDelete = async (domoId) => {
+        try {
+          const response = await fetch('/deleteDomo', {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ domoId }),
+          });
+          const data = await response.json();
+          if (data.error) {
+            console.error(data.error);
+          } else {
+            // Optionally remove the domo from the state to update the UI
+            setDomos(prevDomos => prevDomos.filter(domo => domo._id !== domoId));
+          }
+        } catch (error) {
+          console.error('Failed to delete Domo:', error);
+        }
+      };
+      
     useEffect(() => {
         const loadDomosFromServer = async () => {
             const response = await fetch('/getDomos');
@@ -77,6 +98,7 @@ const DomoList = (props) => {
                 <h3 className="domoName">Name: {domo.name}</h3>
                 <h3 className="domoSpecies">Species: {domo.species}</h3>
                 <h3 className="domoAge">Age: {domo.age}</h3>
+                <button onClick={() => handleDelete(domo._id)}>Delete</button>
             </div>
         );
     });
@@ -97,6 +119,9 @@ DomoList.propTypes = {
     reloadDomos: PropTypes.bool.isRequired,
 };
 
+
+
+  
 const App = () => {
     const [reloadDomos, setReloadDomos] = useState(false);
 

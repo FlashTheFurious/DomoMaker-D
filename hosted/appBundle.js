@@ -776,30 +776,79 @@ var DomoList = function DomoList(props) {
     _useState2 = _slicedToArray(_useState, 2),
     domos = _useState2[0],
     setDomos = _useState2[1];
+  var handleDelete = /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(domoId) {
+      var response, data;
+      return _regeneratorRuntime().wrap(function _callee$(_context) {
+        while (1) switch (_context.prev = _context.next) {
+          case 0:
+            _context.prev = 0;
+            _context.next = 3;
+            return fetch('/deleteDomo', {
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                domoId: domoId
+              })
+            });
+          case 3:
+            response = _context.sent;
+            _context.next = 6;
+            return response.json();
+          case 6:
+            data = _context.sent;
+            if (data.error) {
+              console.error(data.error);
+            } else {
+              // Optionally remove the domo from the state to update the UI
+              setDomos(function (prevDomos) {
+                return prevDomos.filter(function (domo) {
+                  return domo._id !== domoId;
+                });
+              });
+            }
+            _context.next = 13;
+            break;
+          case 10:
+            _context.prev = 10;
+            _context.t0 = _context["catch"](0);
+            console.error('Failed to delete Domo:', _context.t0);
+          case 13:
+          case "end":
+            return _context.stop();
+        }
+      }, _callee, null, [[0, 10]]);
+    }));
+    return function handleDelete(_x) {
+      return _ref.apply(this, arguments);
+    };
+  }();
   useEffect(function () {
     var loadDomosFromServer = /*#__PURE__*/function () {
-      var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+      var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
         var response, data;
-        return _regeneratorRuntime().wrap(function _callee$(_context) {
-          while (1) switch (_context.prev = _context.next) {
+        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+          while (1) switch (_context2.prev = _context2.next) {
             case 0:
-              _context.next = 2;
+              _context2.next = 2;
               return fetch('/getDomos');
             case 2:
-              response = _context.sent;
-              _context.next = 5;
+              response = _context2.sent;
+              _context2.next = 5;
               return response.json();
             case 5:
-              data = _context.sent;
+              data = _context2.sent;
               setDomos(data.domos);
             case 7:
             case "end":
-              return _context.stop();
+              return _context2.stop();
           }
-        }, _callee);
+        }, _callee2);
       }));
       return function loadDomosFromServer() {
-        return _ref.apply(this, arguments);
+        return _ref2.apply(this, arguments);
       };
     }();
     loadDomosFromServer();
@@ -825,7 +874,11 @@ var DomoList = function DomoList(props) {
       className: "domoSpecies"
     }, "Species: ", domo.species), /*#__PURE__*/React.createElement("h3", {
       className: "domoAge"
-    }, "Age: ", domo.age));
+    }, "Age: ", domo.age), /*#__PURE__*/React.createElement("button", {
+      onClick: function onClick() {
+        return handleDelete(domo._id);
+      }
+    }, "Delete"));
   });
   return /*#__PURE__*/React.createElement("div", {
     className: "domoList"
